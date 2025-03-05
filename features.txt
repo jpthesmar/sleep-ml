@@ -1,44 +1,81 @@
-SLEEP DATA FEATURE ENGINEERING
-==============================
+PHYSIOLOGICAL SIGNAL FEATURES DOCUMENTATION
 
-This module extracts physiological features from sleep data collected using the E4 wearable device.
-Features are calculated on downsampled windows (1Hz and 0.03Hz/30-second epochs).
+This document provides descriptions for features extracted from various physiological signals: BVP (Blood Volume Pulse), IBI (Inter-Beat Interval), ACC (Accelerometer), EDA (Electrodermal Activity), TEMP (Temperature), and HR (Heart Rate).
 
-FEATURES DESCRIPTION:
---------------------
+========================================
+BVP FEATURES (BLOOD VOLUME PULSE)
+========================================
 
-BVP Features (Blood Volume Pulse, 64Hz):
-- BVP_mean: Average blood volume pulse, reflects overall blood flow
-- BVP_std: Standard deviation, indicates pulse variability
-- BVP_min: Minimum value, represents lowest blood volume point
-- BVP_max: Maximum value, represents highest blood volume point
-- BVP_median: Median value, robust measure less affected by outliers
-- BVP_range: Range (max-min), indicates pulse amplitude
+BVP_mean: Mean value of the BVP signal within the window, representing average blood volume changes
 
-IBI Features (Inter-Beat Interval, in ms):
-- IBI_mean: Average time between heartbeats, inverse of heart rate
-- RMSSD: Root Mean Square of Successive Differences, reflects parasympathetic activity
-- PNN50: Percentage of intervals >50ms different from preceding interval
-- SDNN: Standard Deviation of NN intervals, overall heart rate variability
+BVP_std: Standard deviation of the BVP signal, indicating variability in blood volume
 
-ACC Features (Accelerometer, 32Hz):
-- ACC_magnitude_mean: Average movement intensity (√(x²+y²+z²))
-- ACC_magnitude_std: Variability in movement intensity
-- ACC_movement_density: Proportion of time with movement above threshold
-- ACC_burst_count: Number of distinct movement episodes
+BVP_min: Minimum value of the BVP signal in the window
 
-EDA Features (Electrodermal Activity, 4Hz):
-- EDA_mean: Average skin conductance, indicates sympathetic nervous activity
-- EDA_std: Variability in skin conductance
-- EDA_trend: Slope of EDA change, direction of sympathetic activity change
+BVP_max: Maximum value of the BVP signal in the window
 
-TEMP Features (Temperature, 4Hz):
-- TEMP_mean: Average skin temperature
-- TEMP_std: Variability in skin temperature
-- TEMP_slope: Rate of temperature change over time window
+BVP_range: Range of BVP values (max-min), indicating the amplitude of blood volume changes
 
-HR Features (Heart Rate, 1Hz):
-- HR_mean: Average heart rate in beats per minute
-- HR_std: Variability in heart rate
-- HR_range: Max HR - Min HR, range of heart rate during the window
-- HR_trend: Slope of heart rate change, indicates acceleration/deceleration
+BVP_median: Median value of the BVP signal, less sensitive to outliers than the mean
+
+========================================
+IBI FEATURES (INTER-BEAT INTERVAL)
+========================================
+
+SDNN: Standard Deviation of NN (Normal-to-Normal) intervals, a common time-domain HRV measure indicating overall heart rate variability
+
+median_nni: Median of NN intervals in milliseconds, representing the central tendency of heartbeat timing
+
+IBI_mean: Mean of Inter-Beat Intervals in milliseconds, representing average time between consecutive heartbeats
+
+========================================
+ACC FEATURES (ACCELEROMETER)
+========================================
+
+x_std: Standard deviation of acceleration in the X-axis, indicating variability of movement in this direction
+
+y_std: Standard deviation of acceleration in the Y-axis, indicating variability of movement in this direction
+
+z_std: Standard deviation of acceleration in the Z-axis, indicating variability of movement in this direction
+
+mag_mean: Mean of the acceleration magnitude (sqrt(x²+y²+z²)), representing overall movement intensity
+
+mag_std: Standard deviation of the acceleration magnitude, indicating variability in overall movement intensity
+
+mag_max: Maximum acceleration magnitude in the window, representing peak movement intensity
+
+movement_density: Proportion of samples where acceleration magnitude exceeds threshold (mean + 1 std), indicating frequency of significant movements
+
+burst_count: Number of transitions from below to above threshold, representing distinct movement initiations
+
+========================================
+EDA FEATURES (ELECTRODERMAL ACTIVITY)
+========================================
+
+EDA_mean: Mean EDA level, representing average skin conductance related to arousal and sweat gland activity
+
+EDA_std: Standard deviation of EDA, indicating variability in skin conductance/arousal
+
+EDA_trend: Slope of the linear regression line fitted to EDA values, indicating whether arousal is increasing (positive) or decreasing (negative)
+
+========================================
+TEMP FEATURES (SKIN TEMPERATURE)
+========================================
+
+TEMP_mean: Mean skin temperature during the window
+
+TEMP_std: Standard deviation of skin temperature, indicating temperature stability
+
+TEMP_slope: Slope of the linear regression line fitted to temperature values, indicating whether temperature is increasing (positive) or decreasing (negative)
+
+========================================
+HR FEATURES (HEART RATE)
+========================================
+
+HR_mean: Mean heart rate in beats per minute (BPM) during the window
+
+HR_std: Standard deviation of heart rate, indicating heart rate variability
+
+HR_range: Range of heart rate values (max-min), representing the extent of heart rate changes
+
+HR_trend: Slope of the linear regression line fitted to heart rate values, indicating whether heart rate is increasing (positive) or decreasing (negative)
