@@ -1,0 +1,44 @@
+SLEEP DATA FEATURE ENGINEERING
+==============================
+
+This module extracts physiological features from sleep data collected using the E4 wearable device.
+Features are calculated on downsampled windows (1Hz and 0.03Hz/30-second epochs).
+
+FEATURES DESCRIPTION:
+--------------------
+
+BVP Features (Blood Volume Pulse, 64Hz):
+- BVP_mean: Average blood volume pulse, reflects overall blood flow
+- BVP_std: Standard deviation, indicates pulse variability
+- BVP_min: Minimum value, represents lowest blood volume point
+- BVP_max: Maximum value, represents highest blood volume point
+- BVP_median: Median value, robust measure less affected by outliers
+- BVP_range: Range (max-min), indicates pulse amplitude
+
+IBI Features (Inter-Beat Interval, in ms):
+- IBI_mean: Average time between heartbeats, inverse of heart rate
+- RMSSD: Root Mean Square of Successive Differences, reflects parasympathetic activity
+- PNN50: Percentage of intervals >50ms different from preceding interval
+- SDNN: Standard Deviation of NN intervals, overall heart rate variability
+
+ACC Features (Accelerometer, 32Hz):
+- ACC_magnitude_mean: Average movement intensity (√(x²+y²+z²))
+- ACC_magnitude_std: Variability in movement intensity
+- ACC_movement_density: Proportion of time with movement above threshold
+- ACC_burst_count: Number of distinct movement episodes
+
+EDA Features (Electrodermal Activity, 4Hz):
+- EDA_mean: Average skin conductance, indicates sympathetic nervous activity
+- EDA_std: Variability in skin conductance
+- EDA_trend: Slope of EDA change, direction of sympathetic activity change
+
+TEMP Features (Temperature, 4Hz):
+- TEMP_mean: Average skin temperature
+- TEMP_std: Variability in skin temperature
+- TEMP_slope: Rate of temperature change over time window
+
+HR Features (Heart Rate, 1Hz):
+- HR_mean: Average heart rate in beats per minute
+- HR_std: Variability in heart rate
+- HR_range: Max HR - Min HR, range of heart rate during the window
+- HR_trend: Slope of heart rate change, indicates acceleration/deceleration
