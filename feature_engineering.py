@@ -1,26 +1,9 @@
 import pandas as pd
-from collections import Counter
-import matplotlib.pyplot as plt
 import numpy as np
-from scipy import signal
-from stats import linregress
+from scipy import stats
+import neurokit2 as nk
 
-def preprocess(file):
-
-    '''
-    input: 
-    A csv file from the DREAMT dataset
-    
-    return: a dataframes containing 4 sleep stages (W, N1, N2, R), no mising values and certain columns dropped with high null ratios
-    '''
-
-    df = pd.read_csv(file).drop(columns=['Obstructive_Apnea', 'Central_Apnea', 'Hypopnea', 'Multiple_Events'])
-
-    df = df[df['Sleep_Stage'] == 'P']
-
-    return df
-
-def calculate_BVP_features(window: pd.DataFrame) -> Dict[str, float]:
+def calculate_BVP_features(window):
     
     bvp = window['BVP'].values
     
@@ -33,45 +16,38 @@ def calculate_BVP_features(window: pd.DataFrame) -> Dict[str, float]:
         'BVP_median': np.median(bvp)
     }
 
-def calculate_HRV_features(window: pd.DataFrame) -> Dict[str, float]:
+def calculate_IBI_features(window):
 
-    ibi_values = window['IBI'].values
+    ibi_values = window['IBI'].values * 1000
 
     # Calculate standard HRV time-domain metrics ------------------------------
     # Standard deviation of NN intervals
     sdnn = np.std(ibi_values) 
     
-    # Calculate successive differences between intervals
-    successive_diffs = np.diff(ibi_values)
-    # RMSSD: Root Mean Square of Successive Differences
-    rmssd = np.sqrt(np.mean(successive_diffs**2))
-    
-    # pNN50: Percentage of successive differences greater than 50ms
-    pnn50 = 100 * np.sum(np.abs(successive_diffs) > 50) / len(successive_diffs)
-    
     # Median of NN intervals
     median_nni = np.median(ibi_values)
 
+    mean = np.mean(ibi_values)
+
     # Calculate standard HRB frqeuncey-domain metrics ---------------------------
     # Use neurokit2 for HRV frequency analysis
-    hrv_freq = nk.hrv_frequency(ibi_values, sampling_rate=None, show=False)
+    #hrv_freq = nk.hrv_frequency(ibi_values, sampling_rate=None, show=False)
         
     # Extract key features
-    lf_power = hrv_freq['HRV_LF'].iloc[0]  # Low Frequency power
-    hf_power = hrv_freq['HRV_HF'].iloc[0]  # High Frequency power
-    lf_hf_ratio = hrv_freq['HRV_LFHF'].iloc[0]  # LF/HF ratio
+    #lf_power = hrv_freq['HRV_LF'].iloc[0]  # Low Frequency power
+    #hf_power = hrv_freq['HRV_HF'].iloc[0]  # High Frequency power
+    #lf_hf_ratio = hrv_freq['HRV_LFHF'].iloc[0]  # LF/HF ratio
 
     return {
         'SDNN': sdnn,
-        'RMSSD': rmssd,
-        'pNN50': pnn50,
         'median_nni': median_nni,
-        'lf_power': lf_power,
-        'hf_power': hf_power,
-        'lf_hf_ratio': lf_hf_ratio
+        'IBI_mean': mean
+        #'lf_power': lf_power,
+        #'hf_power': hf_power,
+        #'lf_hf_ratio': lf_hf_ratio
     }
 
-def calculate_ACC_features(window: pd.DataFrame) -> Dict[str, float]:
+def calculate_ACC_features(window: pd.DataFrame):
 
     acc_x = window['ACC_X'].values
     acc_y = window['ACC_Y'].values
@@ -104,7 +80,7 @@ def calculate_ACC_features(window: pd.DataFrame) -> Dict[str, float]:
         'burst_count': burst_count
     }
 
-def calculate_EDA_features(window: pd.DataFrame) -> Dict[str, float]:
+def calculate_EDA_features(window: pd.DataFrame):
 
     eda = window['EDA'].values
     
@@ -126,7 +102,7 @@ def calculate_EDA_features(window: pd.DataFrame) -> Dict[str, float]:
         'EDA_trend': eda_trend
     }
 
-def calculate_TEMP_features(window: pd.DataFrame) -> Dict[str, float]:
+def calculate_TEMP_features(window: pd.DataFrame):
     
     temp = window['TEMP'].values
 
@@ -148,7 +124,7 @@ def calculate_TEMP_features(window: pd.DataFrame) -> Dict[str, float]:
         'TEMP_slope': temp_slope
     }
     
-def calculate_HR_features(window: pd.DataFrame) -> Dict[str, float]:
+def calculate_HR_features(window: pd.DataFrame):
 
     hr = window['HR'].values
 
