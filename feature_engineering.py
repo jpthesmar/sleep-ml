@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from scipy import stats
-import neurokit2 as nk
 
 def calculate_BVP_features(window):
     
