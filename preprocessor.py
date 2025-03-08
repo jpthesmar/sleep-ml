@@ -155,8 +155,8 @@ class SleepDataProcessor:
 if __name__ == '__main__': 
 
     processor = SleepDataProcessor(
-        data_dir='/Users/daviddechantsreiter/Desktop/WPI/Courses/Machine Learning/sleep-ml/physionet_data',
-        output_dir='/Users/daviddechantsreiter/Desktop/WPI/Courses/Machine Learning/sleep-ml/downsampled_data',
+        data_dir='DREAMT',
+        output_dir="downsampled_data",
         sampling_freq=64
     )
 
